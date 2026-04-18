@@ -1,4 +1,4 @@
-package BasicAndOop.proggrams;
+package BasicAndOop.proggrams.classandobj;
 
 import java.util.Scanner;
 
