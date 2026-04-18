@@ -1,594 +1,722 @@
-
-
-## 1. Java Basics 
-
-Java is:
-
-* **Compiled + Interpreted** (compiled to bytecode → runs on JVM)
-* **Object-Oriented**
-* **Platform Independent** (WORA – Write Once Run Anywhere)
+# Java Core Syntax & Object-Oriented Programming
+> A comprehensive reference covering OOP fundamentals, Generics, Exception Handling, and Java 8+ features — with syntax, usage, and practice questions.
 
 ---
 
-## 2. Variables and Types
+## Table of Contents
+1. [Classes & Objects](#1-classes--objects)
+2. [Encapsulation — Getters & Setters](#2-encapsulation--getters--setters)
+3. [Inheritance](#3-inheritance)
+4. [Polymorphism](#4-polymorphism)
+5. [Abstract Classes & Interfaces](#5-abstract-classes--interfaces)
+6. [Generics](#6-generics)
+7. [Exception Handling](#7-exception-handling)
+8. [Java 8+ Features](#8-java-8-features)
+
+---
+
+## 1. Classes & Objects
+
+### What is a Class?
+A **class** is a blueprint that defines the structure (fields) and behaviour (methods) of objects. An **object** is a concrete instance of that class created at runtime.
 
 ### Syntax
 
 ```java
-type variableName = value;
+// Class definition
+public class Car {
+    // Fields (instance variables)
+    String brand;
+    int year;
+
+    // Constructor
+    public Car(String brand, int year) {
+        this.brand = brand;
+        this.year  = year;
+    }
+
+    // Method
+    public void displayInfo() {
+        System.out.println(brand + " (" + year + ")");
+    }
+}
+
+// Creating objects
+Car myCar = new Car("Toyota", 2022);
+myCar.displayInfo();  // Toyota (2022)
 ```
 
-### Categories
+### Key Concepts
 
-#### Primitive Types
+| Concept | Description |
+|---|---|
+| `new` keyword | Allocates memory and calls the constructor |
+| `this` keyword | Refers to the current object instance |
+| Constructor overloading | Multiple constructors with different parameter lists |
+| `static` members | Belong to the class, not any object instance |
 
-* Stored directly
-* Fixed size
-* Faster
-
-Types:
-`int, double, float, char, boolean, byte, short, long`
-
-#### Reference Types
-
-* Store address of object (heap)
-* Examples: `String`, Arrays, Objects
-
----
-
-### Key Insight
-
-* Primitive → copy value
-* Reference → copy address
-
----
-
-## 3. Control Flow
-
-### Conditional
+### Static vs Instance Members
 
 ```java
-if (condition) { }
-else { }
+public class Counter {
+    static int count = 0;   // shared across ALL instances
+    int id;                  // unique per instance
 
-switch(expression) { case ... }
+    public Counter() {
+        count++;
+        this.id = count;
+    }
+}
+
+Counter a = new Counter(); // count=1, a.id=1
+Counter b = new Counter(); // count=2, b.id=2
 ```
 
-### Loops
+### Practice Questions — Classes & Objects
 
+1. Create a `BankAccount` class with fields `accountNumber`, `owner`, and `balance`. Add a constructor and a `deposit(double amount)` method.
+
+* [Solution](./proggrams/classandobj/BankAcc.java)
+2. What is the difference between a **class variable** (`static`) and an **instance variable**? Give an example of each.
+```java class Student {
+ String name;           // instance variable
+ static int count = 0;  // class (static) variable
+
+    Student(String name) {
+        this.name = name;
+        count++; // shared among all objects
+    }
+ }
+ ```
+* instance variable belongs to an obj, static belongs to class itself
+
+3. What happens if you do **not** define any constructor in a class? Can you still instantiate it?
+* If no constructor is defined, Java automatically provides a default no-argument constructor, so objects can still be instantiated.
+
+4. Write a class `Area`. Add an overloaded constructor: one that accepts both dimensions and one accept single.
+* [Solution](./proggrams/classandobj/AreaOfObject.java)
+5. Explain what `this(...)` does when used inside a constructor.
 ```java
-for(initialization; condition; update) { }
+class Rectangle {
+    double width, height;
 
-while(condition) { }
+    Rectangle(double width, double height) {
+        this.width = width;
+        this.height = height;
+    }
 
-do { } while(condition);
-```
-
----
-
-## 4. Class and Object
-
-### Class Syntax
-
-```java
-class ClassName {
-    // fields
-    // methods
+    Rectangle(double side) {
+        this(side, side); // calls Rectangle(double, double)
+    }
 }
 ```
+* `this(...) is used inside a constructor to call another constructor of the same class for code reuse (constructor chaining).`
 
-### Object Creation
-
-```java
-ClassName obj = new ClassName();
-```
-
+6. What is a **copy constructor**? Write one for the `Car` class above.
+* A copy constructor creates a new object by copying the fields of an existing object of the same class.
+* [Example Program](./proggrams/classandobj/CopyConst.java)
+7. Can a class in Java be instantiated without using `new`? Describe at least two alternative ways.
+* Yes, objects can be created without new using reflection, cloning, or deserialization, where object creation is handled internally by the JVM.
+* [Reflect Method](./proggrams/classandobj/ObjUsingReflect.java)
 ---
 
-* Class = blueprint
-* Object = memory allocation + behavior instance
+## 2. Encapsulation — Getters & Setters
 
----
-
-## 5. Fields and Methods
-
-### Field
-
-```java
-type fieldName;
-```
-
-### Method
-
-```java
-returnType methodName(parameters) {
-    // logic
-}
-```
-
----
-
-### Important
-
-* Fields → state
-* Methods → behavior
-* Methods operate on fields
-
----
-
-## 6. Access Modifiers
+### What is Encapsulation?
+Encapsulation is the practice of **hiding internal state** by making fields `private` and exposing controlled access through `public` getter and setter methods. It protects data integrity and enables validation.
 
 ### Syntax
 
 ```java
-modifier type variableName;
-modifier returnType methodName() { }
+public class Person {
+    // Private fields — hidden from outside
+    private String name;
+    private int age;
+
+    // Getter — read-only access
+    public String getName() {
+        return name;
+    }
+
+    // Setter — write access with validation
+    public void setAge(int age) {
+        if (age < 0 || age > 150) {
+            throw new IllegalArgumentException("Invalid age: " + age);
+        }
+        this.age = age;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setName(String name) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Name cannot be blank");
+        }
+        this.name = name;
+    }
+}
 ```
 
-### Types
-
-* `private` → only inside class
-* `default` → same package
-* `protected` → package + subclass
-* `public` → everywhere
-
----
-
-### Key Insight
-
-* Access modifiers = **control visibility**
-* Core for encapsulation
-
----
-
-## 7. Static vs Instance
-
-### Static
+### Java Records (Java 16+) — Concise Encapsulation
 
 ```java
-static type variableName;
-static returnType methodName() { }
+// Immutable data carrier — getters auto-generated, no setters (immutable)
+public record Point(double x, double y) {}
+
+Point p = new Point(3.0, 4.0);
+System.out.println(p.x()); // 3.0
 ```
 
-* Belongs to class
-* Loaded once (class loading time)
-* Cannot access non-static directly
+### Access Modifiers Summary
+
+| Modifier | Same Class | Same Package | Subclass | Everywhere |
+|---|:---:|:---:|:---:|:---:|
+| `private` | ✅ | ❌ | ❌ | ❌ |
+| *(default)* | ✅ | ✅ | ❌ | ❌ |
+| `protected` | ✅ | ✅ | ✅ | ❌ |
+| `public` | ✅ | ✅ | ✅ | ✅ |
+
+### Practice Questions — Encapsulation
+
+1. Rewrite the `BankAccount` class from Section 1 so all fields are `private`. Add getters for all fields and a setter for `balance` that prevents negative values.
+2. What is the difference between a **read-only** property (getter only) and a **read-write** property (getter + setter)?
+3. Why is it bad practice to expose mutable object references directly from a getter? How can you fix it?
+4. Can a `private` field be accessed by another object of the **same class**? Write code to demonstrate.
+5. What advantage does encapsulation give when you need to change the internal representation of a field later?
+6. Explain how Java **Records** enforce encapsulation differently from traditional classes.
 
 ---
 
-### Instance (Non-static)
+## 3. Inheritance
 
-```java
-type variableName;
-returnType methodName() { }
-```
-
-* Belongs to object
-* Each object gets its own copy
-
----
-
-### Critical Rule
-
-* Static method → cannot use instance variables directly
-* Instance method → can use static
-
----
-
-## 8. Memory Model
-
-### Stack
-
-* Stores:
-
-    * Method calls
-    * Local variables
-    * References
-
-### Heap
-
-* Stores:
-
-    * Objects
-    * Instance variables
-
----
-
-### Important Insight
-
-* Object lives in heap
-* Reference lives in stack
-
----
-
-## 9. Constructor
+### What is Inheritance?
+Inheritance allows a **subclass** to acquire the fields and methods of a **superclass**, enabling code reuse and establishing an IS-A relationship.
 
 ### Syntax
 
 ```java
-ClassName(parameters) {
-    // initialization
+// Superclass (parent)
+public class Animal {
+    protected String name;
+
+    public Animal(String name) {
+        this.name = name;
+    }
+
+    public void eat() {
+        System.out.println(name + " is eating.");
+    }
 }
+
+// Subclass (child)
+public class Dog extends Animal {
+    private String breed;
+
+    public Dog(String name, String breed) {
+        super(name);          // call parent constructor
+        this.breed = breed;
+    }
+
+    public void bark() {
+        System.out.println(name + " says: Woof!");
+    }
+
+    @Override
+    public void eat() {
+        System.out.println(name + " (a dog) is eating kibble.");
+    }
+}
+
+Dog d = new Dog("Rex", "Labrador");
+d.eat();   // Rex (a dog) is eating kibble.
+d.bark();  // Rex says: Woof!
 ```
-
----
-
-### Types
-
-#### Default Constructor
-
-* Provided by compiler (only if none exists)
-
-#### No-Argument Constructor
-
-```java
-ClassName() { }
-```
-
-#### Parameterized Constructor
-
-```java
-ClassName(type param) { }
-```
-
----
-
-### Constructor Overloading
-
-```java
-ClassName() { }
-ClassName(type a) { }
-ClassName(type a, type b) { }
-```
-
----
 
 ### Key Rules
 
-* No return type
-* Called automatically
-* Can use `this()` for chaining
+- Java supports **single inheritance** only (one parent class).
+- Use `super.method()` to call an overridden parent method.
+- `super(...)` **must** be the first statement in a subclass constructor.
+- `final` classes cannot be subclassed; `final` methods cannot be overridden.
+
+### Method Overriding vs Overloading
+
+| Feature | Overriding | Overloading |
+|---|---|---|
+| Where | Subclass | Same class |
+| Signature | Same | Different parameters |
+| Annotation | `@Override` | None required |
+| Resolved at | Runtime | Compile time |
+
+### Practice Questions — Inheritance
+
+1. Create a `Shape` superclass with a field `colour` and a method `area()`. Then create `Circle` and `Triangle` subclasses that override `area()`.
+2. What does the `@Override` annotation do? Is it mandatory? Why is it recommended?
+3. Why does Java not support multiple class inheritance? What problem does this avoid?
+4. If a subclass constructor does not call `super(...)`, what happens?
+5. Demonstrate how to use `super.method()` to extend (not completely replace) the parent's implementation.
+6. What is a **constructor chaining** and how does it work across a two-level inheritance hierarchy?
+7. Can a subclass reduce the visibility of an overridden method (e.g., override a `public` method as `private`)? Why or why not?
 
 ---
 
-## 10. `this` Keyword
+## 4. Polymorphism
 
-### Uses
+### What is Polymorphism?
+Polymorphism means "many forms". It allows the **same interface** to be used for different underlying types. In Java, this is achieved through **method overriding** (runtime polymorphism) and **method overloading** (compile-time polymorphism).
+
+### Runtime Polymorphism
 
 ```java
-this.variable
-this.method()
-this()
-```
+Animal a1 = new Dog("Rex", "Lab");
+Animal a2 = new Cat("Whiskers");
 
----
+a1.eat();  // Dog's eat() — resolved at runtime
+a2.eat();  // Cat's eat() — resolved at runtime
 
-### Purpose
-
-* Refer current object
-* Resolve ambiguity
-* Call constructor
-
----
-
-## 11. Encapsulation
-
-### Concept
-
-* Restrict direct access
-* Expose controlled methods
-
----
-
-### Syntax
-
-```java
-private type variable;
-
-public type getVariable() { }
-public void setVariable(type value) { }
-```
-
----
-
-### Key Insight
-
-* Validation happens in setter
-* Not just hiding data → controlling behavior
-
----
-
-## 12. Inheritance
-
-### Syntax
-
-```java
-class Child extends Parent { }
-```
-
----
-
-### Types
-
-* Single
-* Multilevel
-* Hierarchical
-
----
-
-### Key Insight
-
-* “is-a” relationship
-* Promotes reuse
-* Avoid deep inheritance chains (fragile design)
-
----
-
-## 13. `super` Keyword
-
-### Syntax
-
-```java
-super.variable;
-super.method();
-super();
-```
-
----
-
-### Use Cases
-
-* Access parent variable
-* Call parent method
-* Call parent constructor
-
----
-
-### Important Rule
-
-* `super()` must be first statement in constructor
-
----
-
-## 14. Polymorphism
-
-### Compile-Time (Overloading)
-
-```java
-method(type a)
-method(type a, type b)
-```
-
-* Resolved at compile time
-
----
-
-### Run-Time (Overriding)
-
-```java
-@Override
-returnType methodName() { }
-```
-
----
-
-### Rules of Overriding
-
-* Same method signature
-* Cannot reduce access level
-* Return type must be compatible
-
----
-
-### Dynamic Dispatch
-
-* Method call decided at runtime
-* Based on actual object
-
----
-
-## 15. Abstraction
-
-### Abstract Class Syntax
-
-```java
-abstract class ClassName {
-    abstract returnType methodName();
+// Polymorphic list
+List<Animal> animals = List.of(new Dog("Rex", "Lab"), new Cat("Whiskers"));
+for (Animal a : animals) {
+    a.eat();  // correct method called for each type
 }
 ```
 
----
-
-### Key Points
-
-* Cannot instantiate
-* Can have concrete + abstract methods
-
----
-
-## 16. Interface
-
-### Syntax
+### Upcasting & Downcasting
 
 ```java
-interface InterfaceName {
-    returnType methodName();
+Animal a = new Dog("Rex", "Lab");  // Upcasting (implicit, always safe)
+
+// Downcasting (explicit, can throw ClassCastException)
+if (a instanceof Dog d) {          // Pattern matching (Java 16+)
+    d.bark();
 }
 ```
 
----
+### Practice Questions — Polymorphism
 
-### Implementation
+1. Define runtime polymorphism and compile-time polymorphism. Give a concrete code example of each.
+2. Given a `List<Shape>` containing `Circle`, `Rectangle`, and `Triangle` objects, write a loop that prints the area of each shape without using `instanceof`.
+3. What is **dynamic dispatch**? Why is it important for polymorphism?
+4. What is the difference between **upcasting** and **downcasting**? When can downcasting throw an exception?
+5. Explain the use of the `instanceof` keyword and the Java 16+ pattern matching syntax `(obj instanceof Type var)`.
+6. Can you call a **subclass-specific method** through a **superclass reference** without casting? Why?
+7. What output is produced by the code below, and why?
 
 ```java
-class ClassName implements InterfaceName { }
+class A {
+    void greet() { System.out.println("Hello from A"); }
+}
+class B extends A {
+    void greet() { System.out.println("Hello from B"); }
+}
+A obj = new B();
+obj.greet();
 ```
 
 ---
 
-### Java 8 Additions
+## 5. Abstract Classes & Interfaces
 
-* `default` methods
-* `static` methods
+### Abstract Classes
 
----
-
-### Key Insight
-
-* Interface = contract
-* Enables multiple inheritance
-
----
-
-## 17. final Keyword
-
-### Syntax
+An **abstract class** cannot be instantiated directly. It may have both **abstract methods** (no body — subclasses must implement) and **concrete methods** (with body).
 
 ```java
-final type variable;
-final class ClassName { }
-final returnType method() { }
+public abstract class Vehicle {
+    protected int speed;
+
+    // Abstract method — no body
+    public abstract void fuelType();
+
+    // Concrete method — shared implementation
+    public void accelerate(int amount) {
+        speed += amount;
+        System.out.println("Speed: " + speed);
+    }
+}
+
+public class ElectricCar extends Vehicle {
+    @Override
+    public void fuelType() {
+        System.out.println("Electric");
+    }
+}
+```
+
+### Interfaces
+
+An **interface** defines a contract of behaviour. All methods are implicitly `public abstract` unless marked `default` or `static`.
+
+```java
+public interface Drawable {
+    void draw();                          // abstract
+
+    default void describe() {             // default method (Java 8+)
+        System.out.println("I am drawable.");
+    }
+
+    static void version() {              // static method (Java 8+)
+        System.out.println("Drawable API v1.0");
+    }
+}
+
+public interface Resizable {
+    void resize(double factor);
+}
+
+// A class can implement MULTIPLE interfaces
+public class Circle extends Shape implements Drawable, Resizable {
+    @Override public void draw()              { System.out.println("Drawing circle"); }
+    @Override public void resize(double f)    { radius *= f; }
+}
+```
+
+### Abstract Class vs Interface
+
+| Feature | Abstract Class | Interface |
+|---|---|---|
+| Instantiation | ❌ | ❌ |
+| Fields | Any type | `public static final` only |
+| Constructor | ✅ | ❌ |
+| Multiple inheritance | ❌ (single) | ✅ (multiple) |
+| Method bodies | ✅ | Only `default`/`static` |
+| Use when | Shared state + behaviour | Pure contract / multiple roles |
+
+### Practice Questions — Abstract Classes & Interfaces
+
+1. Create an abstract class `Appliance` with abstract method `operate()` and concrete method `powerOn()`. Extend it with `WashingMachine` and `Microwave`.
+2. When should you use an **abstract class** over an **interface**? Give a real-world scenario for each.
+3. Can an abstract class have a constructor? What is its purpose if the class cannot be instantiated?
+4. What happens if a concrete class does not implement all abstract methods from its parent?
+5. Write an interface `Sortable` with a `compareTo(Object o)` method and a `default` method `isLessThan(Object o)` that uses it.
+6. A class implements two interfaces that both define a `default` method with the same signature. How does Java resolve this conflict?
+7. Explain the difference between `interface` and `@FunctionalInterface`. Why does the number of abstract methods matter?
+
+---
+
+## 6. Generics
+
+### What are Generics?
+Generics enable **type-safe, reusable code** by parameterising classes, interfaces, and methods with type variables. They eliminate casting and catch type errors at compile time.
+
+### Generic Class
+
+```java
+public class Box<T> {
+    private T value;
+
+    public Box(T value)  { this.value = value; }
+    public T getValue()  { return value; }
+}
+
+Box<Integer> intBox    = new Box<>(42);
+Box<String>  strBox    = new Box<>("Hello");
+```
+
+### Generic Method
+
+```java
+public static <T extends Comparable<T>> T max(T a, T b) {
+    return a.compareTo(b) >= 0 ? a : b;
+}
+
+System.out.println(max(10, 20));      // 20
+System.out.println(max("cat","ant")); // cat
+```
+
+### Bounded Type Parameters & Wildcards
+
+```java
+// Upper bound — T must be Number or a subclass
+public static <T extends Number> double sum(List<T> list) {
+    return list.stream().mapToDouble(Number::doubleValue).sum();
+}
+
+// Wildcard — unknown type
+public static void printList(List<?> list) {
+    list.forEach(System.out::println);
+}
+
+// Upper-bounded wildcard
+void process(List<? extends Shape> shapes) { ... }
+
+// Lower-bounded wildcard
+void addNumbers(List<? super Integer> list) { ... }
+```
+
+### Practice Questions — Generics
+
+1. Create a generic `Pair<A, B>` class that holds two values of different types and provides getters for each.
+2. What is **type erasure**? What are its implications at runtime?
+3. Explain the difference between `List<?>`, `List<? extends Number>`, and `List<? super Integer>`.
+4. Write a generic method `swap(T[] arr, int i, int j)` that swaps two elements in any array.
+5. Why can you not create `new T[]` inside a generic class? What is the workaround?
+6. What is the difference between a **raw type** (`List`) and a **parameterised type** (`List<String>`)? Why are raw types discouraged?
+7. Can a generic class extend a non-generic class? Can it extend another generic class? Show syntax examples.
+
+---
+
+## 7. Exception Handling
+
+### What is Exception Handling?
+Exception handling provides a **structured way to respond to runtime errors** without crashing the program. Java uses `try-catch-finally` blocks and a hierarchy of throwable types.
+
+### Exception Hierarchy
+
+```
+Throwable
+ ├── Error           (JVM-level — do NOT catch: OutOfMemoryError, StackOverflowError)
+ └── Exception
+      ├── Checked    (must handle or declare: IOException, SQLException)
+      └── RuntimeException (unchecked — optional: NullPointerException, IllegalArgumentException)
+```
+
+### Basic Syntax
+
+```java
+try {
+    int result = 10 / 0;                  // throws ArithmeticException
+} catch (ArithmeticException e) {
+    System.out.println("Math error: " + e.getMessage());
+} catch (Exception e) {                   // catch broader types last
+    System.out.println("Unexpected: " + e);
+} finally {
+    System.out.println("Always runs");    // cleanup code
+}
+```
+
+### Multi-catch & Try-with-Resources
+
+```java
+// Multi-catch (Java 7+)
+try {
+    ...
+} catch (IOException | SQLException e) {
+    System.out.println("IO or DB error: " + e);
+}
+
+// Try-with-resources — auto-closes AutoCloseable objects
+try (BufferedReader br = new BufferedReader(new FileReader("data.txt"))) {
+    String line = br.readLine();
+} catch (IOException e) {
+    e.printStackTrace();
+}
+```
+
+### Custom Exceptions
+
+```java
+// Checked custom exception
+public class InsufficientFundsException extends Exception {
+    private double amount;
+
+    public InsufficientFundsException(double amount) {
+        super("Insufficient funds. Short by: " + amount);
+        this.amount = amount;
+    }
+
+    public double getAmount() { return amount; }
+}
+
+// Usage
+public void withdraw(double amount) throws InsufficientFundsException {
+    if (amount > balance) {
+        throw new InsufficientFundsException(amount - balance);
+    }
+    balance -= amount;
+}
+```
+
+### Practice Questions — Exception Handling
+
+1. What is the difference between **checked** and **unchecked** exceptions? Give two examples of each.
+2. What is the role of the `finally` block? Can it be omitted? Does it run if a `return` statement is in the `try` block?
+3. Rewrite the `withdraw()` method above to throw an **unchecked** `InsufficientFundsException`. When is this preferable?
+4. What is **exception chaining**? Use `new RuntimeException("msg", cause)` in an example.
+5. Why should you avoid catching `Exception` or `Throwable` broadly?
+6. What happens if an exception is thrown inside a `finally` block that is already handling another exception?
+7. Create a custom checked exception `InvalidAgeException` and use it in a `Person.setAge()` method. Write the calling code showing proper `try-catch`.
+
+---
+
+## 8. Java 8+ Features
+
+### 8.1 Lambda Expressions
+
+A **lambda** is an anonymous function — a concise way to implement a **functional interface**.
+
+```java
+// Old way
+Runnable r = new Runnable() {
+    public void run() { System.out.println("Running"); }
+};
+
+// Lambda
+Runnable r = () -> System.out.println("Running");
+
+// With parameters
+Comparator<String> comp = (a, b) -> a.compareTo(b);
+
+// Block body
+Comparator<Integer> cmp = (a, b) -> {
+    System.out.println("Comparing " + a + " and " + b);
+    return Integer.compare(a, b);
+};
+```
+
+### Common Functional Interfaces
+
+| Interface | Signature | Use |
+|---|---|---|
+| `Predicate<T>` | `boolean test(T t)` | Filtering |
+| `Function<T,R>` | `R apply(T t)` | Mapping / transforming |
+| `Consumer<T>` | `void accept(T t)` | Performing side-effects |
+| `Supplier<T>` | `T get()` | Providing values |
+| `BiFunction<T,U,R>` | `R apply(T t, U u)` | Two-argument mapping |
+
+### Method References
+
+```java
+List<String> names = List.of("Alice", "Bob", "Charlie");
+
+names.forEach(System.out::println);         // instance method ref
+names.stream().map(String::toUpperCase)...  // instance method on element
+names.stream().sorted(String::compareTo)... // instance method as comparator
+
+// Constructor reference
+Supplier<ArrayList<String>> s = ArrayList::new;
 ```
 
 ---
 
-### Meaning
+### 8.2 Streams API
 
-* Variable → constant
-* Method → cannot override
-* Class → cannot inherit
+Streams provide **declarative, pipeline-based** processing of sequences of elements.
+
+```java
+List<Integer> numbers = List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+
+// filter → map → collect
+List<Integer> result = numbers.stream()
+    .filter(n -> n % 2 == 0)         // 2,4,6,8,10
+    .map(n -> n * n)                 // 4,16,36,64,100
+    .collect(Collectors.toList());
+
+// reduce
+int sum = numbers.stream()
+    .reduce(0, Integer::sum);        // 55
+
+// groupingBy
+Map<Boolean, List<Integer>> grouped = numbers.stream()
+    .collect(Collectors.partitioningBy(n -> n % 2 == 0));
+
+// flatMap
+List<List<Integer>> nested = List.of(List.of(1,2), List.of(3,4));
+List<Integer> flat = nested.stream()
+    .flatMap(Collection::stream)
+    .collect(Collectors.toList());   // [1,2,3,4]
+```
+
+### Intermediate vs Terminal Operations
+
+| Type | Examples | Returns |
+|---|---|---|
+| Intermediate (lazy) | `filter`, `map`, `sorted`, `distinct`, `limit`, `flatMap` | `Stream<T>` |
+| Terminal (eager) | `collect`, `forEach`, `reduce`, `count`, `findFirst`, `anyMatch` | Value / side-effect |
 
 ---
 
-## 18. Exception Handling
+### 8.3 Optional
 
-### Syntax
+`Optional<T>` is a container that **may or may not hold a value** — it replaces `null` and prevents `NullPointerException`.
 
 ```java
-try { }
-catch(ExceptionType e) { }
-finally { }
+Optional<String> opt = Optional.of("Hello");
+Optional<String> empty = Optional.empty();
+Optional<String> nullable = Optional.ofNullable(null); // empty
+
+// Checking & unwrapping
+opt.isPresent();                          // true
+opt.get();                                // "Hello" (throws if empty)
+opt.orElse("default");                   // "Hello"
+opt.orElseGet(() -> "computed default"); // lazy fallback
+opt.orElseThrow(() -> new RuntimeException("No value"));
+
+// Transforming
+Optional<Integer> length = opt.map(String::length);        // Optional[5]
+Optional<String> filtered = opt.filter(s -> s.length() > 3); // Optional[Hello]
+
+// Chaining — avoid nested Optionals
+Optional<String> city = findUser(id)
+    .flatMap(User::getAddress)
+    .map(Address::getCity);
 ```
 
 ---
 
-### Throwing
+### Practice Questions — Java 8+ Features
 
+**Lambdas**
+1. Rewrite this anonymous class as a lambda: `Comparator<String> c = new Comparator<>() { public int compare(String a, String b) { return a.length() - b.length(); } };`
+2. What is a **functional interface**? Can it have more than one abstract method? What does `@FunctionalInterface` guarantee?
+3. Write a `Predicate<Integer>` that returns `true` for even numbers and compose it with another `Predicate` for numbers greater than 10 using `and()`.
+
+**Streams**
+
+4. Given `List<String> words`, write a stream pipeline that returns a sorted list of distinct words longer than 4 characters, all in uppercase.
+5. What is the difference between `map()` and `flatMap()`? Show an example where only `flatMap()` works correctly.
+6. Explain **lazy evaluation** in streams. Why does the following code NOT print anything?
 ```java
-throw new Exception();
+Stream<Integer> s = Stream.of(1, 2, 3).filter(n -> { System.out.println(n); return n > 1; });
 ```
+7. Use `Collectors.groupingBy` to group a `List<Person>` by their `department` field into a `Map<String, List<Person>>`.
+8. What is the difference between `findFirst()` and `findAny()`? When does it matter?
 
-### Declaring
+**Optional**
 
+9. Why is `optional.get()` considered bad practice? What should you use instead?
+10. Rewrite this null-checking code using `Optional`:
 ```java
-method() throws Exception { }
+String city = null;
+User user = findUser(id);
+if (user != null) {
+    Address addr = user.getAddress();
+    if (addr != null) {
+        city = addr.getCity();
+    }
+}
 ```
+11. Can `Optional` be used as a **method parameter** type? What are the arguments against it?
+12. Write a method that accepts an `Optional<String>` email, validates it contains `@`, and returns an `Optional<String>` with the domain part only.
 
 ---
 
-### Types
+## Quick Reference Card
 
-* Checked → must handle
-* Unchecked → optional
-
----
-
-### Key Insight
-
-* Exceptions = control flow for errors
-* Avoid overusing try-catch
-
----
-
-## 19. Generics
-
-### Syntax
-
-```java
-class ClassName<T> { }
 ```
+OOP Pillars
+  Encapsulation  → private fields + public getters/setters
+  Inheritance    → extends (single), super(), @Override
+  Polymorphism   → runtime dispatch, upcasting/downcasting
+  Abstraction    → abstract class | interface
 
----
+Generics
+  <T>                    → type parameter
+  <T extends Bound>      → upper bound
+  <? extends T>          → read-only wildcard
+  <? super T>            → write-friendly wildcard
 
-### Usage
+Exceptions
+  try / catch / finally / throw / throws
+  checked  → must handle (IOException)
+  unchecked → optional (RuntimeException)
 
-```java
-T variable;
+Java 8+
+  Lambda           (a, b) -> expr
+  Method ref       Class::method
+  Stream           .filter().map().collect()
+  Optional         .orElse() .map() .flatMap()
 ```
-
----
-
-### Benefits
-
-* Type safety
-* No casting
-* Reusability
-
----
-
-### Key Insight
-
-* Generics work only with reference types (not primitives)
-
----
-
-## 20. Java 8 Features
-
----
-
-### Lambda Expression
-
-### Syntax
-
-```java
-(parameters) -> expression
-```
-
----
-
-### Functional Interface
-
-* Interface with one abstract method
-
----
-
-### Streams
-
-### Syntax
-
-```java
-collection.stream()
-```
-
-Operations:
-
-* `filter()`
-* `map()`
-* `reduce()`
-
----
-
-### Key Insight
-
-* Streams = functional-style data processing
-* Do not store data, process it
-
----
-
-### Optional
-
-### Syntax
-
-```java
-Optional<Type> obj;
-```
-
----
-
-### Purpose
-
-* Avoid null checks
-* Represent optional value
-
----
 
