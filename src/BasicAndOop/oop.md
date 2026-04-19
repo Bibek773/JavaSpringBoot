@@ -181,11 +181,30 @@ System.out.println(p.x()); // 3.0
 ### Practice Questions — Encapsulation
 
 1. Rewrite the `BankAccount` class from Section 1 so all fields are `private`. Add getters for all fields and a setter for `balance` that prevents negative values.
+* [Solution](./proggrams/Encapsulation/BankAcc.java)
 2. What is the difference between a **read-only** property (getter only) and a **read-write** property (getter + setter)?
+* **Read-only property:** Has only a getter method, so the value can be accessed but not modified from outside the class.
+
+* **Read-write property:** Has both getter and setter methods, so the value can be accessed and also updated.
+
 3. Why is it bad practice to expose mutable object references directly from a getter? How can you fix it?
+* Exposing a mutable object through a getter is bad because it allows external code to directly change the internal state of the class, breaking encapsulation.
+
+Fix it by returning a **copy of the object** or an **unmodifiable view**.
+```java
+public ArrayList<String> getSubjects() {
+    return new ArrayList<>(subjects);
+    //or
+    public List<String> getSubjects() {
+        return Collections.unmodifiableList(subjects);
+    }
+}
+```
 4. Can a `private` field be accessed by another object of the **same class**? Write code to demonstrate.
+* A private member is accessible within the same class, even across different objects of that class. [Example](./proggrams/Encapsulation/AccessOtherObjField.java)
 5. What advantage does encapsulation give when you need to change the internal representation of a field later?
-6. Explain how Java **Records** enforce encapsulation differently from traditional classes.
+* Encapsulation lets you **change the internal representation of a field without affecting external code**, because access is controlled through getters/setters rather than direct field access.
+
 
 ---
 
