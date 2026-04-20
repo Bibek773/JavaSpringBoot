@@ -1,9 +1,11 @@
 # Java Core Syntax & Object-Oriented Programming
+
 > A comprehensive reference covering OOP fundamentals, Generics, Exception Handling, and Java 8+ features — with syntax, usage, and practice questions.
 
 ---
 
 ## Table of Contents
+
 1. [Classes & Objects](#1-classes--objects)
 2. [Encapsulation — Getters & Setters](#2-encapsulation--getters--setters)
 3. [Inheritance](#3-inheritance)
@@ -18,7 +20,9 @@
 ## 1. Classes & Objects
 
 ### What is a Class?
-A **class** is a blueprint that defines the structure (fields) and behaviour (methods) of objects. An **object** is a concrete instance of that class created at runtime.
+
+A **class** is a blueprint that defines the structure (fields) and behaviour (methods) of objects.  
+An **object** is a concrete instance of that class created at runtime.
 
 ### Syntax
 
@@ -72,30 +76,50 @@ Counter a = new Counter(); // count=1, a.id=1
 Counter b = new Counter(); // count=2, b.id=2
 ```
 
+---
+
 ### Practice Questions — Classes & Objects
 
-1. Create a `BankAccount` class with fields `accountNumber`, `owner`, and `balance`. Add a constructor and a `deposit(double amount)` method.
+---
 
-* [Solution](./proggrams/classandobj/BankAcc.java)
-2. What is the difference between a **class variable** (`static`) and an **instance variable**? Give an example of each.
-```java class Student {
- String name;           // instance variable
- static int count = 0;  // class (static) variable
+**Q1.** Create a `BankAccount` class with fields `accountNumber`, `owner`, and `balance`. Add a constructor and a `deposit(double amount)` method.
+
+> 📄 [Solution](./proggrams/classandobj/BankAcc.java)
+
+---
+
+**Q2.** What is the difference between a **class variable** (`static`) and an **instance variable**? Give an example of each.
+
+```java
+class Student {
+    String name;           // instance variable — unique per object
+    static int count = 0;  // class variable — shared across all objects
 
     Student(String name) {
         this.name = name;
-        count++; // shared among all objects
+        count++;
     }
- }
- ```
-* instance variable belongs to an obj, static belongs to class itself
+}
+```
 
-3. What happens if you do **not** define any constructor in a class? Can you still instantiate it?
-* If no constructor is defined, Java automatically provides a default no-argument constructor, so objects can still be instantiated.
+**Answer:** An instance variable belongs to an individual object. A static (class) variable belongs to the class itself and is shared among all instances.
 
-4. Write a class `Area`. Add an overloaded constructor: one that accepts both dimensions and one accept single.
-* [Solution](./proggrams/classandobj/AreaOfObject.java)
-5. Explain what `this(...)` does when used inside a constructor.
+---
+
+**Q3.** What happens if you do **not** define any constructor in a class? Can you still instantiate it?
+
+**Answer:** If no constructor is defined, Java automatically provides a default no-argument constructor, so the class can still be instantiated.
+
+---
+
+**Q4.** Write a class `Area` with an overloaded constructor — one accepting both dimensions, and one accepting a single value.
+
+> 📄 [Solution](./proggrams/classandobj/AreaOfObject.java)
+
+---
+
+**Q5.** Explain what `this(...)` does when used inside a constructor.
+
 ```java
 class Rectangle {
     double width, height;
@@ -106,23 +130,35 @@ class Rectangle {
     }
 
     Rectangle(double side) {
-        this(side, side); // calls Rectangle(double, double)
+        this(side, side); // delegates to Rectangle(double, double)
     }
 }
 ```
-* `this(...) is used inside a constructor to call another constructor of the same class for code reuse (constructor chaining).`
 
-6. What is a **copy constructor**? Write one for the `Car` class above.
-* A copy constructor creates a new object by copying the fields of an existing object of the same class.
-* [Example Program](./proggrams/classandobj/CopyConst.java)
-7. Can a class in Java be instantiated without using `new`? Describe at least two alternative ways.
-* Yes, objects can be created without new using reflection, cloning, or deserialization, where object creation is handled internally by the JVM.
-* [Reflect Method](./proggrams/classandobj/ObjUsingReflect.java)
+**Answer:** `this(...)` calls another constructor in the same class, enabling constructor chaining and reducing code duplication.
+
+---
+
+**Q6.** What is a **copy constructor**? Write one for the `Car` class above.
+
+**Answer:** A copy constructor creates a new object by copying the fields of an existing object of the same class.
+
+> 📄 [Example Program](./proggrams/classandobj/CopyConst.java)
+
+---
+
+**Q7.** Can a class in Java be instantiated without using `new`? Describe at least two alternative ways.
+
+**Answer:** Yes — objects can be created without `new` using **reflection**, **cloning**, or **deserialization**, where object creation is handled internally by the JVM.
+
+> 📄 [Reflection Method Example](./proggrams/classandobj/ObjUsingReflect.java)
+
 ---
 
 ## 2. Encapsulation — Getters & Setters
 
 ### What is Encapsulation?
+
 Encapsulation is the practice of **hiding internal state** by making fields `private` and exposing controlled access through `public` getter and setter methods. It protects data integrity and enables validation.
 
 ### Syntax
@@ -178,39 +214,64 @@ System.out.println(p.x()); // 3.0
 | `protected` | ✅ | ✅ | ✅ | ❌ |
 | `public` | ✅ | ✅ | ✅ | ✅ |
 
+---
+
 ### Practice Questions — Encapsulation
 
-1. Rewrite the `BankAccount` class from Section 1 so all fields are `private`. Add getters for all fields and a setter for `balance` that prevents negative values.
-* [Solution](./proggrams/Encapsulation/BankAcc.java)
-2. What is the difference between a **read-only** property (getter only) and a **read-write** property (getter + setter)?
-* **Read-only property:** Has only a getter method, so the value can be accessed but not modified from outside the class.
+---
 
-* **Read-write property:** Has both getter and setter methods, so the value can be accessed and also updated.
+**Q1.** Rewrite the `BankAccount` class from Section 1 so all fields are `private`. Add getters for all fields and a setter for `balance` that prevents negative values.
 
-3. Why is it bad practice to expose mutable object references directly from a getter? How can you fix it?
-* Exposing a mutable object through a getter is bad because it allows external code to directly change the internal state of the class, breaking encapsulation.
+> 📄 [Solution](./proggrams/Encapsulation/BankAcc.java)
 
-Fix it by returning a **copy of the object** or an **unmodifiable view**.
+---
+
+**Q2.** What is the difference between a **read-only** property (getter only) and a **read-write** property (getter + setter)?
+
+**Answer:**
+- **Read-only:** Has only a getter — the value can be accessed but not modified from outside.
+- **Read-write:** Has both getter and setter — the value can be accessed and updated.
+
+---
+
+**Q3.** Why is it bad practice to expose mutable object references directly from a getter? How can you fix it?
+
+**Answer:** Exposing a mutable object allows external code to change the internal state of the class directly, breaking encapsulation.
+
+Fix it by returning a **defensive copy** or an **unmodifiable view**:
+
 ```java
+// Option 1: Defensive copy
 public ArrayList<String> getSubjects() {
     return new ArrayList<>(subjects);
-    //or
-    public List<String> getSubjects() {
-        return Collections.unmodifiableList(subjects);
-    }
+}
+
+// Option 2: Unmodifiable view
+public List<String> getSubjects() {
+    return Collections.unmodifiableList(subjects);
 }
 ```
-4. Can a `private` field be accessed by another object of the **same class**? Write code to demonstrate.
-* A private member is accessible within the same class, even across different objects of that class. [Example](./proggrams/Encapsulation/AccessOtherObjField.java)
-5. What advantage does encapsulation give when you need to change the internal representation of a field later?
-* Encapsulation lets you **change the internal representation of a field without affecting external code**, because access is controlled through getters/setters rather than direct field access.
 
+---
+
+**Q4.** Can a `private` field be accessed by another object of the **same class**? Write code to demonstrate.
+
+**Answer:** Yes — `private` members are accessible anywhere within the same class, including from other instances of that class.
+
+> 📄 [Example](./proggrams/Encapsulation/AccessOtherObjField.java)
+
+---
+
+**Q5.** What advantage does encapsulation give when you need to change the internal representation of a field later?
+
+**Answer:** Encapsulation lets you change the internal representation without affecting external code, because access is always mediated through getters/setters rather than direct field access.
 
 ---
 
 ## 3. Inheritance
 
 ### What is Inheritance?
+
 Inheritance allows a **subclass** to acquire the fields and methods of a **superclass**, enabling code reuse and establishing an IS-A relationship.
 
 ### Syntax
@@ -269,18 +330,55 @@ d.bark();  // Rex says: Woof!
 | Annotation | `@Override` | None required |
 | Resolved at | Runtime | Compile time |
 
-### Practice Questions — Inheritance
+---
 
-1. Create a `Shape` superclass with a field `colour` and a method `area()`. Then create `Circle` and `Triangle` subclasses that override `area()`.
-2. What does the `@Override` annotation do? Is it mandatory? Why is it recommended?
-3. Why does Java not support multiple class inheritance? What problem does this avoid?
-4. If a subclass constructor does not call `super(...)`, what happens?
-5. Demonstrate how to use `super.method()` to extend (not completely replace) the parent's implementation.
-6. What is a **constructor chaining** and how does it work across a two-level inheritance hierarchy?
-7. Can a subclass reduce the visibility of an overridden method (e.g., override a `public` method as `private`)? Why or why not?
+### Practice Questions — Inheritance
 
 ---
 
+**Q1.** Create a `Shape` superclass with a field `colour` and a method `area()`. Then create `Circle` and `Triangle` subclasses that override `area()`.
+
+> 📄 [Solution](./proggrams/Inheritance/Inherit.java)
+
+---
+
+**Q2.** What does the `@Override` annotation do? Is it mandatory? Why is it recommended?
+
+**Answer:** `@Override` signals to the compiler that a method is intended to override one from the superclass.
+
+It is **not mandatory**, but strongly recommended — it catches mistakes like typos in method names or mismatched signatures that would silently create a new overloaded method instead of overriding.
+
+---
+
+**Q3.** Why does Java not support multiple class inheritance? What problem does this avoid?
+
+**Answer:** Java avoids multiple inheritance to prevent the **Diamond Problem** — the ambiguity that arises when two parent classes define the same method and the compiler cannot determine which version to use.
+
+---
+
+**Q4.** If a subclass constructor does not call `super(...)`, what happens?
+
+**Answer:** Java automatically inserts a call to the parent's **no-argument constructor**. If the parent has no no-arg constructor, a **compilation error** occurs.
+
+---
+
+**Q5.** Demonstrate how to use `super.method()` to extend (not completely replace) the parent's implementation.
+
+> 📄 [Solution](./proggrams/Inheritance/SuperDemo.java)
+
+---
+
+**Q6.** What is **constructor chaining** and how does it work across a two-level inheritance hierarchy?
+
+**Answer:** Constructor chaining ensures proper initialization by having each constructor invoke another. In a two-level hierarchy, the subclass constructor calls `super()`, which calls the grandparent's constructor — initializing from the top down before the child adds its own setup.
+
+---
+
+**Q7.** Can a subclass reduce the visibility of an overridden method (e.g., override a `public` method as `private`)? Why or why not?
+
+**Answer:** No. Visibility can only be kept the same or increased in an override, never reduced. Reducing visibility would break polymorphism — a parent-type reference could no longer call the method it expects to be accessible.
+
+---
 ## 4. Polymorphism
 
 ### What is Polymorphism?
