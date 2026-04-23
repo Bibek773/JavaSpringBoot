@@ -382,6 +382,7 @@ It is **not mandatory**, but strongly recommended — it catches mistakes like t
 ## 4. Polymorphism
 
 ### What is Polymorphism?
+
 Polymorphism means "many forms". It allows the **same interface** to be used for different underlying types. In Java, this is achieved through **method overriding** (runtime polymorphism) and **method overloading** (compile-time polymorphism).
 
 ### Runtime Polymorphism
@@ -411,15 +412,60 @@ if (a instanceof Dog d) {          // Pattern matching (Java 16+)
 }
 ```
 
+---
+
 ### Practice Questions — Polymorphism
 
-1. Define runtime polymorphism and compile-time polymorphism. Give a concrete code example of each.
-2. Given a `List<Shape>` containing `Circle`, `Rectangle`, and `Triangle` objects, write a loop that prints the area of each shape without using `instanceof`.
-3. What is **dynamic dispatch**? Why is it important for polymorphism?
-4. What is the difference between **upcasting** and **downcasting**? When can downcasting throw an exception?
-5. Explain the use of the `instanceof` keyword and the Java 16+ pattern matching syntax `(obj instanceof Type var)`.
-6. Can you call a **subclass-specific method** through a **superclass reference** without casting? Why?
-7. What output is produced by the code below, and why?
+---
+
+**Q1.** Define runtime polymorphism and compile-time polymorphism. Give a concrete code example of each.
+
+> 📄 [Runtime Polymorphism](./proggrams/Polymorphism/runtimepoly.java)  
+> 📄 [Compile-Time Polymorphism](./proggrams/Polymorphism/compiletimepoly.java)
+
+---
+
+**Q2.** Given a `List<Shape>` containing `Circle`, `Rectangle`, and `Triangle` objects, write a loop that prints the area of each shape without using `instanceof`.
+
+> 📄 [Solution](./proggrams/Polymorphism/Areaof.java)
+
+---
+
+**Q3.** What is **dynamic dispatch**? Why is it important for polymorphism?
+
+**Answer:** Dynamic dispatch is the mechanism by which the JVM determines which method implementation to execute at **runtime**, based on the actual object type rather than the declared reference type.
+
+It is fundamental to polymorphism — it allows a single `Shape` reference to call the correct `area()` implementation whether the object is a `Circle`, `Triangle`, or `Rectangle`. Without dynamic dispatch, all calls would resolve to the base class method and polymorphism would not work.
+
+---
+
+**Q4.** What is the difference between **upcasting** and **downcasting**? When can downcasting throw an exception?
+
+**Answer:**
+
+**Upcasting** — converting a subclass object to a superclass reference. It is implicit and always safe.
+
+```java
+Shape s = new Circle();  // Circle IS-A Shape — always valid
+```
+
+**Downcasting** — converting a superclass reference back to a subclass type. It is explicit and potentially unsafe.
+
+```java
+Circle c = (Circle) s;  // must cast manually
+```
+
+Downcasting throws a **`ClassCastException`** at runtime if the actual object is not an instance of the target type. For example, casting a `Triangle` reference to `Circle` will fail. Use `instanceof` (or pattern matching in Java 16+) to guard against this:
+
+```java
+if (s instanceof Circle c) {
+    c.draw();  // safe — no explicit cast needed
+}
+```
+
+---
+
+**Q5.** What output is produced by the code below, and why?
 
 ```java
 class A {
@@ -428,12 +474,17 @@ class A {
 class B extends A {
     void greet() { System.out.println("Hello from B"); }
 }
+
 A obj = new B();
 obj.greet();
 ```
 
----
+**Output:**
+```
+Hello from B
+```
 
+**Answer:** Even though `obj` is declared as type `A`, the actual object in memory is a `B`. Java uses dynamic dispatch — method calls are resolved based on the **runtime type of the object**, not the declared reference type. So `B`'s `greet()` is called.
 ## 5. Abstract Classes & Interfaces
 
 ### Abstract Classes
