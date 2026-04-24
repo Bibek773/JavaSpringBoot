@@ -495,7 +495,7 @@ An **abstract class** cannot be instantiated directly. It may have both **abstra
 public abstract class Vehicle {
     protected int speed;
 
-    // Abstract method — no body
+    // Abstract method — no body, subclass must implement
     public abstract void fuelType();
 
     // Concrete method — shared implementation
@@ -519,7 +519,7 @@ An **interface** defines a contract of behaviour. All methods are implicitly `pu
 
 ```java
 public interface Drawable {
-    void draw();                          // abstract
+    void draw();                          // abstract — must be implemented
 
     default void describe() {             // default method (Java 8+)
         System.out.println("I am drawable.");
@@ -536,8 +536,8 @@ public interface Resizable {
 
 // A class can implement MULTIPLE interfaces
 public class Circle extends Shape implements Drawable, Resizable {
-    @Override public void draw()              { System.out.println("Drawing circle"); }
-    @Override public void resize(double f)    { radius *= f; }
+    @Override public void draw()            { System.out.println("Drawing circle"); }
+    @Override public void resize(double f)  { radius *= f; }
 }
 ```
 
@@ -549,21 +549,79 @@ public class Circle extends Shape implements Drawable, Resizable {
 | Fields | Any type | `public static final` only |
 | Constructor | ✅ | ❌ |
 | Multiple inheritance | ❌ (single) | ✅ (multiple) |
-| Method bodies | ✅ | Only `default`/`static` |
+| Method bodies | ✅ | Only `default` / `static` |
 | Use when | Shared state + behaviour | Pure contract / multiple roles |
-
-### Practice Questions — Abstract Classes & Interfaces
-
-1. Create an abstract class `Appliance` with abstract method `operate()` and concrete method `powerOn()`. Extend it with `WashingMachine` and `Microwave`.
-2. When should you use an **abstract class** over an **interface**? Give a real-world scenario for each.
-3. Can an abstract class have a constructor? What is its purpose if the class cannot be instantiated?
-4. What happens if a concrete class does not implement all abstract methods from its parent?
-5. Write an interface `Sortable` with a `compareTo(Object o)` method and a `default` method `isLessThan(Object o)` that uses it.
-6. A class implements two interfaces that both define a `default` method with the same signature. How does Java resolve this conflict?
-7. Explain the difference between `interface` and `@FunctionalInterface`. Why does the number of abstract methods matter?
 
 ---
 
+### Practice Questions — Abstract Classes & Interfaces
+
+---
+
+**Q1.** Create an abstract class `Appliance` with an abstract method `operate()` and a concrete method `powerOn()`. Extend it with `WashingMachine` and `Microwave`.
+
+> 📄 [Solution](./proggrams/AbstractionAndInterface/example.java)
+
+---
+
+**Q2.** When should you use an **abstract class** over an **interface**? Give a real-world scenario for each.
+
+**Answer:**
+
+**Use an abstract class** when classes share a close IS-A relationship and need common state or reusable method implementations.
+
+> Example: `BankAccount` → `SavingsAccount`, `CurrentAccount`  
+> All accounts share fields like `balance` and logic like `deposit()`, so an abstract class avoids duplication.
+
+**Use an interface** when you want to define a capability that unrelated classes can adopt, supporting multiple roles.
+
+> Example: `Payable` → `KhaltiPayment`, `EsewaPayment`  
+> These may not share any implementation, but all must fulfil the same payment contract.
+
+---
+
+**Q3.** Can an abstract class have a constructor? What is its purpose if the class cannot be instantiated?
+
+**Answer:** Yes, an abstract class can have a constructor. Even though the abstract class itself cannot be instantiated, its constructor is automatically called when a subclass object is created (via `super(...)`). Its purpose is to initialize **common fields shared by all subclasses**, keeping initialization logic in one place.
+
+---
+
+**Q4.** What happens if a concrete class does not implement all abstract methods from its parent?
+
+**Answer:** A **compile-time error** occurs — the compiler requires all inherited abstract methods to be implemented. The only way to avoid it without implementing them is to also declare the subclass as `abstract`, deferring implementation to the next concrete subclass down the hierarchy.
+
+---
+
+**Q5.** Write an interface `Sortable` with a `compareTo(Object o)` method and a `default` method `isLessThan(Object o)` that uses it.
+
+> 📄 [Solution](./proggrams/AbstractionAndInterface/InterfaceExample.java)
+
+---
+
+**Q6.** A class implements two interfaces that both define a `default` method with the same signature. How does Java resolve this conflict?
+
+**Answer:** Java raises a **compile-time error** — it cannot determine which interface's default method to use. The implementing class must explicitly override the conflicting method and resolve it manually, optionally delegating to one of the interfaces:
+
+```java
+@Override
+public void describe() {
+    InterfaceA.super.describe();  // explicitly choose one
+}
+```
+
+---
+
+**Q7.** Explain the difference between `interface` and `@FunctionalInterface`. Why does the number of abstract methods matter?
+
+**Answer:** A regular interface can declare any number of abstract methods. A `@FunctionalInterface` is restricted to **exactly one abstract method**, which makes it compatible with **lambda expressions** — lambdas provide the implementation of that single method inline. The `@FunctionalInterface` annotation also instructs the compiler to enforce this constraint, catching mistakes early.
+
+| Feature | Interface | `@FunctionalInterface` |
+|---|---|---|
+| Abstract methods | Any number | Exactly 1 |
+| Purpose | General contract | Lambda / functional-style support |
+| `default` / `static` methods | ✅ Allowed | ✅ Allowed |
+| Lambda usage | Not required | Designed for it |
+| Compiler enforcement | ❌ | ✅ |
 ## 6. Generics
 
 ### What are Generics?
