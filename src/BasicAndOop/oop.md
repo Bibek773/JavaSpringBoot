@@ -683,10 +683,10 @@ void addNumbers(List<? super Integer> list) { ... }
 7. Can a generic class extend a non-generic class? Can it extend another generic class? Show syntax examples.
 
 ---
-
 ## 7. Exception Handling
 
 ### What is Exception Handling?
+
 Exception handling provides a **structured way to respond to runtime errors** without crashing the program. Java uses `try-catch-finally` blocks and a hierarchy of throwable types.
 
 ### Exception Hierarchy
@@ -755,18 +755,122 @@ public void withdraw(double amount) throws InsufficientFundsException {
 }
 ```
 
-### Practice Questions — Exception Handling
+---
 
-1. What is the difference between **checked** and **unchecked** exceptions? Give two examples of each.
-2. What is the role of the `finally` block? Can it be omitted? Does it run if a `return` statement is in the `try` block?
-3. Rewrite the `withdraw()` method above to throw an **unchecked** `InsufficientFundsException`. When is this preferable?
-4. What is **exception chaining**? Use `new RuntimeException("msg", cause)` in an example.
-5. Why should you avoid catching `Exception` or `Throwable` broadly?
-6. What happens if an exception is thrown inside a `finally` block that is already handling another exception?
-7. Create a custom checked exception `InvalidAgeException` and use it in a `Person.setAge()` method. Write the calling code showing proper `try-catch`.
+### Practice Questions — Exception Handling
 
 ---
 
+**Q1.** What is the difference between **checked** and **unchecked** exceptions? Give two examples of each.
+
+**Answer:**
+
+| Aspect | Checked Exception | Unchecked Exception |
+|---|---|---|
+| Detected at | Compile-time | Runtime |
+| Handling | Must use `try-catch` or `throws` | No mandatory handling |
+| Cause | External / unavoidable conditions | Programming / logic errors |
+| Inherits from | `Exception` (not `RuntimeException`) | `RuntimeException` |
+| Examples | `IOException`, `SQLException` | `NullPointerException`, `IllegalArgumentException` |
+
+---
+
+**Q2.** What is the role of the `finally` block? Can it be omitted? Does it run if a `return` statement is in the `try` block?
+
+**Answer:** The `finally` block contains cleanup code (closing files, releasing resources) that should run regardless of whether an exception occurred. Key behaviours:
+
+- **Always executes** — whether or not an exception is thrown or caught.
+- **Runs before `return`** — even if `try` has a `return` statement, `finally` executes first.
+- **Can be omitted** — but a `try` block must have at least one `catch` or `finally`.
+- **May not run** if the JVM is forcefully stopped (e.g., `System.exit()` or a JVM crash).
+
+> ⚠️ Avoid placing a `return` statement inside `finally` — it overrides any value returned from `try` or `catch`, which leads to subtle bugs.
+
+---
+
+**Q3.** Rewrite the `withdraw()` method above to throw an **unchecked** `InsufficientFundsException`. When is this preferable?
+
+> 📄 [Solution](./proggrams/ExceptionHandling/unchecked.java)
+
+---
+
+**Q4.** What is **exception chaining**? Use `new RuntimeException("msg", cause)` in an example.
+
+**Answer:** Exception chaining means wrapping one exception inside another so the original cause is preserved and not silently lost. This is useful when catching a low-level exception and re-throwing a higher-level one that better describes the context.
+
+```java
+try {
+    // low-level operation
+} catch (IOException e) {
+    throw new RuntimeException("Failed to load config file", e); // e is the cause
+}
+```
+
+> 📄 [Example Program](./proggrams/ExceptionHandling/ExceptionChainingDemo.java)
+
+---
+
+**Q5.** Why should you avoid catching `Exception` or `Throwable` broadly?
+
+**Answer:** Catching too broadly causes several problems:
+
+- **Hides real errors** — different exceptions need different handling; a single catch masks this.
+- **Swallows bugs** — catching `Exception` includes `NullPointerException` and similar logic errors that should be fixed, not silently ignored.
+- **Unsafe with `Throwable`** — this also catches `Error` subclasses like `OutOfMemoryError`, which signal serious JVM problems that your code should not attempt to recover from.
+- **Makes debugging harder** — the true source of a problem becomes obscured behind a generic handler.
+
+Always catch the **most specific exception type** you can handle meaningfully.
+
+---
+
+**Q6.** What happens if an exception is thrown inside a `finally` block that is already handling another exception?
+
+**Answer:** The new exception thrown from `finally` **replaces** the original exception — the original is completely lost unless you manually preserve it. This is one reason to keep `finally` blocks simple and free of operations that might throw.
+
+```java
+try {
+    throw new RuntimeException("Original");
+} finally {
+    throw new RuntimeException("From finally"); // Original is lost
+}
+```
+
+To avoid losing the original, catch it first and attach it as a cause before re-throwing.
+
+---
+
+**Q7.** Create a custom checked exception `InvalidAgeException` and use it in a `Person.setAge()` method. Write the calling code showing proper `try-catch`.
+
+```java
+// Custom checked exception
+public class InvalidAgeException extends Exception {
+    public InvalidAgeException(int age) {
+        super("Invalid age: " + age + ". Must be between 0 and 150.");
+    }
+}
+
+// Usage in Person class
+public class Person {
+    private int age;
+
+    public void setAge(int age) throws InvalidAgeException {
+        if (age < 0 || age > 150) {
+            throw new InvalidAgeException(age);
+        }
+        this.age = age;
+    }
+}
+
+// Calling code
+public static void main(String[] args) {
+    Person p = new Person();
+    try {
+        p.setAge(-5);
+    } catch (InvalidAgeException e) {
+        System.out.println("Caught: " + e.getMessage());
+    }
+}
+```
 ## 8. Java 8+ Features
 
 ### 8.1 Lambda Expressions
