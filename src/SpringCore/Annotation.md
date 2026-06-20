@@ -1635,7 +1635,9 @@ public String getUser(@PathVariable("id") Long userId) {
 ```text
 @PathVariable means:
 Take value from the URL path and store it in a method parameter.
-```## `@RequestParam`
+```
+
+## `@RequestParam`
 
 **Annotation:**  
 `@RequestParam`
