@@ -13,4 +13,6 @@ public interface StudentRepository {
     Student findById(int idNumber);
 
     void deleteById(int idNumber);
+
+    void update(Student student);
 }
