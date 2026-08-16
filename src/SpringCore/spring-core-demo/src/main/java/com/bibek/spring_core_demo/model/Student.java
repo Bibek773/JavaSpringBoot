@@ -6,6 +6,15 @@ public class Student{
     private String lastName;
     private int age;
 
+    @Override
+    public String toString() {
+        return "Student{" +
+                "idNumber=" + idNumber +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", age=" + age +
+                '}';
+    }
     public int getIdNumber() {
         return idNumber;
     }
