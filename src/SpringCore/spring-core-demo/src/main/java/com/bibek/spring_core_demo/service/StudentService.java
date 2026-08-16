@@ -1,6 +1,9 @@
 package com.bibek.spring_core_demo.service;
 
+import com.bibek.spring_core_demo.model.Student;
 import com.bibek.spring_core_demo.repository.StudentRepository;
+
+import java.util.List;
 
 public class StudentService {
     // A StudentService needs a StudentRepository to work with student data.
@@ -23,5 +26,24 @@ public class StudentService {
     public StudentService(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
         // recive vayeko Repository store garera rakheko
+    }
+    public void saveStudent(Student student) {
+        studentRepository.save(student);
+    }
+
+    public List<Student> getAllStudents() {
+        return studentRepository.findAll();
+    }
+
+    public Student getStudentById(int id) {
+        return studentRepository.findById(id);
+    }
+
+    public void deleteStudentById(int id) {
+        studentRepository.deleteById(id);
+    }
+
+    public void updateStudent(Student student) {
+        studentRepository.update(student);
     }
 }
