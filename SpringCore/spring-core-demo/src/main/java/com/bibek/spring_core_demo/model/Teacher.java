@@ -8,9 +8,9 @@ public class Teacher {
     @Override
     public String toString() {
         return "Teacher{" +
-                "id=" + id  +
+                "id=" + id +
                 ", name='" + name + '\'' +
-                ", subject='" + subject+ '\'' +
+                ", subject='" + subject + '\'' +
                 ", age=" + age +
                 '}';
     }
