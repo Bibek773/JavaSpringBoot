@@ -5,11 +5,12 @@ import com.bibek.spring_core_demo.model.Teacher;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TeacherRepositoryImpl implements TeacherRepository{
+public class TeacherRepositoryImpl implements TeacherRepository {
+
     private final List<Teacher> teachers = new ArrayList<>();
 
     @Override
-    public void save(Teacher teacher){
+    public void save(Teacher teacher) {
         teachers.add(teacher);
     }
 
@@ -19,9 +20,9 @@ public class TeacherRepositoryImpl implements TeacherRepository{
     }
 
     @Override
-    public Teacher findById(int id){
-        for(Teacher teacher: teachers){
-            if (teacher.getId() == id){
+    public Teacher findById(int id) {
+        for (Teacher teacher : teachers) {
+            if (teacher.getId() == id) {
                 return teacher;
             }
         }
@@ -30,17 +31,13 @@ public class TeacherRepositoryImpl implements TeacherRepository{
 
     @Override
     public void deleteById(int id) {
-        for (Teacher teacher: teachers){
-            if(teacher.getId()==id){
-                teachers.remove(teacher);
-            }
-        }
+        teachers.removeIf(teacher -> teacher.getId() == id);
     }
 
     @Override
     public void update(Teacher teacher) {
-        for (int i =0; i< teachers.size(); i++){
-            if(teachers.get(i).getId()== teacher.getId()){
+        for (int i = 0; i < teachers.size(); i++) {
+            if (teachers.get(i).getId() == teacher.getId()) {
                 teachers.set(i, teacher);
                 return;
             }
