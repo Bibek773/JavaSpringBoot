@@ -4,9 +4,11 @@ package com.bibek.spring_core_demo.controller;
 import com.bibek.spring_core_demo.model.Teacher;
 
 import com.bibek.spring_core_demo.service.TeacherServices;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 public class TeacherController {
     private TeacherServices teacherService;
 

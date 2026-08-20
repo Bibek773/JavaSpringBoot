@@ -2,9 +2,11 @@ package com.bibek.spring_core_demo.controller;
 
 import com.bibek.spring_core_demo.model.Student;
 import com.bibek.spring_core_demo.service.StudentService;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 public class StudentController {
 
     private final StudentService studentService;

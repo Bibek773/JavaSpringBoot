@@ -2,9 +2,11 @@ package com.bibek.spring_core_demo.service;
 
 import com.bibek.spring_core_demo.model.Teacher;
 import com.bibek.spring_core_demo.repository.TeacherRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class TeacherServices {
 
     private final TeacherRepository teacherRepository;

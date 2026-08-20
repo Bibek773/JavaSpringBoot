@@ -5,20 +5,16 @@ import com.bibek.spring_core_demo.model.Student;
 import com.bibek.spring_core_demo.repository.StudentRepository;
 import com.bibek.spring_core_demo.repository.StudentRepositoryImpl;
 import com.bibek.spring_core_demo.service.StudentService;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class ManualTest {
 
     public static void main(String[] args) {
 
-        // 1. Create the repository implementation
-        StudentRepository repository = new StudentRepositoryImpl();
-
-        // 2. Inject repository into the service
-        StudentService service = new StudentService(repository);
-
-        // 3. Inject service into the controller
-        StudentController controller = new StudentController(service);
-
+        ApplicationContext context = new AnnotationConfigApplicationContext("com.bibek.spring_core_demo");
+        StudentController controller = context.getBean(StudentController.class);
+      
 
         Student student = new Student();
 

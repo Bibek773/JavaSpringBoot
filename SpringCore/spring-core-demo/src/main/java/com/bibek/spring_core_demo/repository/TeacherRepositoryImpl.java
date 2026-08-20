@@ -1,9 +1,12 @@
 package com.bibek.spring_core_demo.repository;
 
 import com.bibek.spring_core_demo.model.Teacher;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+
+@Repository
 
 public class TeacherRepositoryImpl implements TeacherRepository {
 

@@ -1,10 +1,12 @@
 package com.bibek.spring_core_demo.repository;
 
 import com.bibek.spring_core_demo.model.Student;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class StudentRepositoryImpl implements StudentRepository {
 
     private final List<Student> students = new ArrayList<>();

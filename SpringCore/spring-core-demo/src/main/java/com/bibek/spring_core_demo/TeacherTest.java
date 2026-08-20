@@ -1,23 +1,20 @@
 package com.bibek.spring_core_demo;
 
+import com.bibek.spring_core_demo.controller.StudentController;
 import com.bibek.spring_core_demo.controller.TeacherController;
 import com.bibek.spring_core_demo.model.Teacher;
 import com.bibek.spring_core_demo.repository.TeacherRepository;
 import com.bibek.spring_core_demo.repository.TeacherRepositoryImpl;
 import com.bibek.spring_core_demo.service.TeacherServices;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class TeacherTest {
 
     public static void main(String[] args) {
 
-        // Repository
-        TeacherRepository repository = new TeacherRepositoryImpl();
-
-        // Service
-        TeacherServices service = new TeacherServices(repository);
-
-        // Controller
-        TeacherController controller = new TeacherController(service);
+        ApplicationContext context = new AnnotationConfigApplicationContext("com.bibek.spring_core_demo");
+        TeacherController controller = context.getBean(TeacherController.class);
 
         // Create teachers
         Teacher teacher1 = new Teacher();

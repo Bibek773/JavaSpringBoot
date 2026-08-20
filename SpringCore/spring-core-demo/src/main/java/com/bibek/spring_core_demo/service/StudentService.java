@@ -2,9 +2,11 @@ package com.bibek.spring_core_demo.service;
 
 import com.bibek.spring_core_demo.model.Student;
 import com.bibek.spring_core_demo.repository.StudentRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class StudentService {
     // A StudentService needs a StudentRepository to work with student data.
 
