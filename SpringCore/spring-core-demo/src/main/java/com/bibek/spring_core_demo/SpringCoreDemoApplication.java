@@ -1,6 +1,6 @@
 package com.bibek.spring_core_demo;
-
-import com.bibek.spring_core_demo.config.AppConfig;
+//
+//import com.bibek.spring_core_demo.config.AppConfig;
 import com.bibek.spring_core_demo.controller.StudentController;
 import com.bibek.spring_core_demo.controller.TeacherController;
 import com.bibek.spring_core_demo.repository.StudentRepository;
@@ -16,27 +16,38 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 @SpringBootApplication
 public class SpringCoreDemoApplication {
+//
+//	public static void main(String[] args) {
+//		SpringApplication.run(SpringCoreDemoApplication.class, args);
+//
+//		ApplicationContext context =new AnnotationConfigApplicationContext(AppConfig.class);
+//
+//		ObjTest objTest = context.getBean(ObjTest.class);
+//
+//		System.out.println(objTest);
+//	}
+//	StudentRepository repository = new StudentRepositoryImpl();
+//
+//	StudentService service = new StudentService(repository);
+//
+//	StudentController controller = new StudentController(service);
+//
+//	TeacherRepository trepo = new TeacherRepositoryImpl();
+//
+//	TeacherServices tser = new TeacherServices(trepo);
+//
+//	TeacherController tcon = new TeacherController(tser);
+//
 
 	public static void main(String[] args) {
-		SpringApplication.run(SpringCoreDemoApplication.class, args);
 
-		ApplicationContext context =new AnnotationConfigApplicationContext(AppConfig.class);
+		ApplicationContext context =
+				SpringApplication.run(SpringCoreDemoApplication.class, args);
 
-		ObjTest objTest = context.getBean(ObjTest.class);
+		PaymentController controller =
+				context.getBean(PaymentController.class);
 
-		System.out.println(objTest);
+		controller.makePayment();
 	}
-	StudentRepository repository = new StudentRepositoryImpl();
-
-	StudentService service = new StudentService(repository);
-
-	StudentController controller = new StudentController(service);
-
-	TeacherRepository trepo = new TeacherRepositoryImpl();
-
-	TeacherServices tser = new TeacherServices(trepo);
-
-	TeacherController tcon = new TeacherController(tser);
-
-
+//
 }
