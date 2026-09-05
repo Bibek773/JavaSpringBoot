@@ -73,6 +73,36 @@ prod → production database
 
 This allows us to change the environment without changing the application code.
 
+### Activating Profiles
+
+A profile must be **active** for Spring to load its beans.
+
+Using `application.properties`:
+
+```properties
+spring.profiles.active=dev
+```
+
+Now Spring activates the `dev` profile.
+
+To activate production:
+
+```properties
+spring.profiles.active=prod
+```
+
+You can also activate a profile when running the application:
+
+```text
+--spring.profiles.active=dev
+```
+
+or:
+
+```text
+--spring.profiles.active=prod
+```
+
 ### Key Points
 
 * `@Profile` controls when a bean is active.
